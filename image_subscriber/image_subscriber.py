@@ -27,7 +27,7 @@ class ImagePieceSubscriber(Node):
 
     def show_image(self, img_path):
         # Create a sub-process that shows the received image with the fbi-function
-        subprocess.run(["fbi", "--noverbose","-a", f"{img_path}"])
+        subprocess.run(["fbi", "--noverbose","-a","-T","1", f"{img_path}"])
 
     def listener_callback(self, msg):
         self.get_logger().info('I heard: "%d"' % msg.piece_id)
