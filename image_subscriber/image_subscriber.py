@@ -9,7 +9,7 @@ import sys
 import os
 from PIL import Image
 from custom_messages.msg import ImagePiece
-
+import subprocess
 
 class ImagePieceSubscriber(Node):
     def __init__(self, piece_id):
@@ -23,17 +23,11 @@ class ImagePieceSubscriber(Node):
             self.listener_callback,
             10
         )
-        """
-        self.get_logger().info("Subscribed to topic image_pieces")
-
-        self.save_directory = "received_images"
-        os.makedirs(self.save_directory, exist_ok=True)
-        """
         self.subscription
 
     def show_image(self, img_path):
-        img = Image.open(img_path)
-        img.show()
+        # Create a sub-process that shows the received image with the fbi-function
+        subprocess.run(["fbi", "--noverbose","-a", f"{img_path}"])
 
     def listener_callback(self, msg):
         self.get_logger().info('I heard: "%d"' % msg.piece_id)
@@ -45,12 +39,8 @@ class ImagePieceSubscriber(Node):
             # cv2.imshow(f"Image Piece", cv_image)
             img_path = '/home/rlab/received_images/piece.png'
             cv2.imwrite(img_path, cv_image)
-            """
-            image_filename = os.path.join(self.save_directory, f"image_piece_{self.piece_id}.png")
-            cv2.imwrite(image_filename, cv_image)
-            """
+
             self.show_image(img_path)
-            cv2.waitKey(1)
             self.get_logger().info("Received image piece.")
 
 
